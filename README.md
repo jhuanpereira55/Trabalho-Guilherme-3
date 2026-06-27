@@ -32,7 +32,7 @@
 
 ---
 
-## 🛠️ Comandos SQL (DDL)
+## Comandos SQL (DDL)
 
 ```sql
 CREATE TABLE aluno (
