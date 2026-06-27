@@ -3,27 +3,59 @@
 ## Tabelas do Banco de Dados (PostgreSQL)
 
 ### aluno
-| Campo | Tipo | Descrição |
+| Coluna | Tipo | Restrições |
 | :--- | :--- | :--- |
-| id | SERIAL PK | Identificador único do aluno |
-| nome | VARCHAR(100) | Nome completo do estudante |
-| email | VARCHAR(100) | Correio eletrónico de contacto |
-| telefone | VARCHAR(20) | Número de telefone/telemóvel |
+| id | SERIAL | PRIMARY KEY |
+| nome | VARCHAR(100) | NOT NULL |
+| email | VARCHAR(150) | NOT NULL |
+| telefone | VARCHAR(20) | NOT NULL |
 
 ### curso
-| Campo | Tipo | Descrição |
+| Coluna | Tipo | Restrições |
 | :--- | :--- | :--- |
-| id | SERIAL PK | Identificador único do curso |
-| nome | VARCHAR(100) | Nome da disciplina/curso |
-| descricao | TEXT | Detalhes sobre a ementa |
-| carga_horaria | INT | Carga horária total |
-| vagas_totais | INT | Limite físico de vagas livres |
+| id | SERIAL | PRIMARY KEY |
+| nome | VARCHAR(100) | NOT NULL |
+| descricao | TEXT | - |
+| carga_horaria | INTEGER | NOT NULL, CHECK (> 0) |
+| vagas_totais | INTEGER | NOT NULL, CHECK (> 0) |
+| vagas_disponiveis | INTEGER | NOT NULL, CHECK (>= 0) |
 
 ### matricula
-| Campo | Tipo | Descrição |
+| Coluna | Tipo | Restrições |
 | :--- | :--- | :--- |
-| id | SERIAL PK | Protocolo único da inscrição |
-| id_aluno | INT FK | Vínculo com a tabela aluno |
-| id_curso | INT FK | Vínculo com a tabela curso |
-| data_matricula | DATE | Data de efetivação da inscrição |
-| valor | NUMERIC(10,2) | Aporte financeiro investido |
+| id | SERIAL | PRIMARY KEY |
+| id_aluno | INTEGER | NOT NULL, FK → aluno(id) |
+| id_curso | INTEGER | NOT NULL, FK → curso(id) |
+| data_matricula | DATE | NOT NULL |
+| valor | NUMERIC(10,2) | NOT NULL, CHECK (>= 0) |
+| UNIQUE | (id_aluno, id_curso) | Impede matrícula duplicada |
+
+---
+
+## 🛠️ Comandos SQL (DDL)
+
+```sql
+CREATE TABLE aluno (
+    id        SERIAL        PRIMARY KEY,
+    nome      VARCHAR(100)  NOT NULL,
+    email     VARCHAR(150)  NOT NULL,
+    telefone  VARCHAR(20)   NOT NULL
+);
+
+CREATE TABLE curso (
+    id                 SERIAL        PRIMARY KEY,
+    nome               VARCHAR(100)  NOT NULL,
+    descricao          TEXT,
+    carga_horaria      INTEGER       NOT NULL CHECK (carga_horaria > 0),
+    vagas_totais       INTEGER       NOT NULL CHECK (vagas_totais > 0),
+    vagas_disponiveis  INTEGER       NOT NULL CHECK (vagas_disponiveis >= 0)
+);
+
+CREATE TABLE matricula (
+    id              SERIAL   PRIMARY KEY,
+    id_aluno        INTEGER  NOT NULL REFERENCES aluno(id),
+    id_curso        INTEGER  NOT NULL REFERENCES curso(id),
+    data_matricula  DATE     NOT NULL,
+    valor           NUMERIC(10,2) NOT NULL CHECK (valor >= 0),
+    UNIQUE (id_aluno, id_curso)
+);
