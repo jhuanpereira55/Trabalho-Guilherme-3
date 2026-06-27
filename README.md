@@ -1,3 +1,4 @@
+```markdown
 # Cenário 1 — Sistema de Clínica Veterinária
 
 ## Tabelas do Banco de Dados (PostgreSQL)
@@ -5,25 +6,55 @@
 ### tutor
 | Campo | Tipo | Descrição |
 | :--- | :--- | :--- |
-| id | SERIAL PK | Identificador único |
-| nome | VARCHAR(100) | Nome do tutor |
-| endereco | VARCHAR(200) | Endereço do tutor |
-| telefone | VARCHAR(20) | Telefone do tutor |
+| id | SERIAL | PRIMARY KEY |
+| nome | VARCHAR(100) | NOT NULL |
+| endereco | VARCHAR(200) | NOT NULL |
+| telefone | VARCHAR(20) | NOT NULL |
 
 ### animal
 | Campo | Tipo | Descrição |
 | :--- | :--- | :--- |
-| id | SERIAL PK | Identificador único |
-| nome | VARCHAR(100) | Nome do animal |
-| especie | VARCHAR(50) | Espécie do animal |
-| raca | VARCHAR(50) | Raça do animal |
-| id_tutor | INTEGER FK | Referência ao tutor |
+| id | SERIAL | PRIMARY KEY |
+| nome | VARCHAR(100) | NOT NULL |
+| especie | VARCHAR(50) | NOT NULL |
+| raca | VARCHAR(50) | NOT NULL |
+| id_tutor | INTEGER | FK → tutor(id), NOT NULL |
 
 ### consulta
 | Campo | Tipo | Descrição |
 | :--- | :--- | :--- |
-| id | SERIAL PK | Identificador único |
-| id_animal | INTEGER FK | Referência ao animal |
-| data | DATE | Data da consulta |
-| motivo | VARCHAR(200) | Motivo do atendimento |
-| valor | NUMERIC(10,2) | Valor cobrado |
+| id | SERIAL | PRIMARY KEY |
+| id_animal | INTEGER | FK → animal(id), NOT NULL |
+| data | DATE | NOT NULL |
+| motivo | VARCHAR(200) | NOT NULL |
+| valor | NUMERIC(10,2) | NOT NULL, CHECK >= 0 |
+
+---
+
+## Comandos SQL (DDL)
+
+```sql
+CREATE TABLE tutor (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    endereco VARCHAR(200) NOT NULL,
+    telefone VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE animal (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    especie VARCHAR(50) NOT NULL,
+    raca VARCHAR(50) NOT NULL,
+    id_tutor INTEGER NOT NULL,
+    FOREIGN KEY (id_tutor) REFERENCES tutor(id)
+);
+
+CREATE TABLE consulta (
+    id SERIAL PRIMARY KEY,
+    id_animal INTEGER NOT NULL,
+    data DATE NOT NULL,
+    motivo VARCHAR(200) NOT NULL,
+    valor NUMERIC(10,2) NOT NULL CHECK (valor >= 0),
+    FOREIGN KEY (id_animal) REFERENCES animal(id)
+);
