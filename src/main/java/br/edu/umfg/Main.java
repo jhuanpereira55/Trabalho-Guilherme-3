@@ -1,57 +1,48 @@
 package br.edu.umfg;
 
-import br.edu.umfg.controller.ClienteController;
-import br.edu.umfg.controller.OrdemServicoController;
-import br.edu.umfg.controller.VeiculoController;
-import br.edu.umfg.model.Cliente;
-import br.edu.umfg.model.OrdemServico;
-import br.edu.umfg.model.Veiculo;
+import br.edu.umfg.controller.AnimalController;
+import br.edu.umfg.controller.ConsultaController;
+import br.edu.umfg.controller.TutorController;
+import br.edu.umfg.model.Animal;
+import br.edu.umfg.model.Consulta;
+import br.edu.umfg.model.Tutor;
+
+import java.time.LocalDate;
+import java.util.List;
 
 public class Main {
-
     public static void main(String[] args) {
 
-        ClienteController clienteController = new ClienteController();
-        VeiculoController veiculoController = new VeiculoController();
-        OrdemServicoController osController      = new OrdemServicoController();
+        TutorController tutorController = new TutorController();
+        AnimalController animalController = new AnimalController();
+        ConsultaController consultaController = new ConsultaController();
 
-        System.out.println("====== [ FLUXO DE COMPORTAMENTO: GESTÃO DE OFICINA AUTOMOTIVA ] ======\n");
+        // 1. Cadastrar o tutor
+        System.out.println("====== [ FLUXO OPERACIONAL: REGISTRO DE TUTOR ] ======");
+        Tutor tutor = new Tutor("Diego Souza", "Rua de Japurá, 777", "4499959012");
+        tutorController.cadastrar(tutor);
+        System.out.println("ID do Tutor gerado automaticamente: " + tutor.getId());
 
-        System.out.println(">>> [FASE 1] Inserção de Novo Cliente");
-        Cliente cliente = new Cliente("Carlos Pereira", "44988776655");
-        cliente = clienteController.cadastrar(cliente);
+        // 2. Cadastrar o animal vinculado ao tutor
+        System.out.println("\n====== [ FLUXO OPERACIONAL: VÍNCULO DE ANIMAL ] ======");
+        Animal animal = new Animal("Diego Jr", "Mosquito", "Dengue", tutor.getId());
+        animalController.cadastrar(animal);
+        System.out.println("ID do Animal gerado automaticamente: " + animal.getId());
 
-        System.out.println("\n>>> [FASE 2] Registro de Veículos Associados");
-        Veiculo veiculo = new Veiculo("ayd-1470", "Honda Civic", 2020, cliente.getId());
-        veiculo = veiculoController.cadastrar(veiculo);
+        // 3. Registrar a consulta vinculada ao animal
+        System.out.println("\n====== [ FLUXO OPERACIONAL: PROTOCOLO DE ATENDIMENTO ] ======");
+        Consulta consulta = new Consulta(animal.getId(), LocalDate.now(), "Vacina Zika Virus", 150.00);
+        consultaController.cadastrar(consulta);
+        System.out.println("ID da Consulta gerado automaticamente: " + consulta.getId());
 
-        Veiculo veiculo2 = new Veiculo("Xyz-5226", "Toyota Corolla", 2018, cliente.getId());
-        veiculo2 = veiculoController.cadastrar(veiculo2);
+        // 4. Listar os animais do tutor
+        System.out.println("\n====== [ SISTEMA DE BUSCA: ANIMAIS POR RESPONSÁVEL ] ======");
+        List<Animal> animaisDoTutor = animalController.listarPorTutor(tutor.getId());
+        animaisDoTutor.forEach(System.out::println);
 
-        System.out.println("\n>>> [FASE 3] Inicialização de Ordens de Serviço (OS)");
-        OrdemServico os1 = new OrdemServico(veiculo.getId(), "Troca de óleo e filtro", 250.00);
-        os1 = osController.abrir(os1);
-
-        OrdemServico os2 = new OrdemServico(veiculo.getId(), "Alinhamento e balanceamento", 180.00);
-        os2 = osController.abrir(os2);
-
-        System.out.println("\n>>> [FASE 4] Atualização de Status de OS para Concluído");
-        osController.concluir(os1.getId());
-
-        System.out.println("\n>>> [FASE 5] Consulta: Histórico de Intervenções por Veículo");
-        osController.listarPorVeiculo(veiculo.getId());
-
-        System.out.println("\n>>> [FASE 6] Consulta: Frota Pertencente ao Cliente");
-        veiculoController.listarPorCliente(cliente.getId());
-
-        System.out.println("\n>>> [FASE 7] Homologação de Regra: Orçamento com Valor Negativo");
-        OrdemServico invalida1 = new OrdemServico(veiculo.getId(), "Revisão", -100.00);
-        osController.abrir(invalida1);
-
-        System.out.println("\n>>> [FASE 8] Homologação de Regra: Vínculo com Veículo Inexistente");
-        OrdemServico invalida2 = new OrdemServico(9999, "Revisão", 200.00);
-        osController.abrir(invalida2);
-
-        System.out.println("\n====== [ FINALIZAÇÃO DA ROTINA DE DIAGNÓSTICO ] ======");
+        // 5. Listar as consultas do animal
+        System.out.println("\n====== [ SISTEMA DE BUSCA: HISTÓRICO CLÍNICO DO PACIENTE ] ======");
+        List<Consulta> consultasDoAnimal = consultaController.listarPorAnimal(animal.getId());
+        consultasDoAnimal.forEach(System.out::println);
     }
 }

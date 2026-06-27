@@ -6,11 +6,15 @@ import java.sql.SQLException;
 
 public class Conexao {
 
-    private static final String URL      = "jdbc:postgresql://localhost:5432/oficina_mecanica";
-    private static final String USER     = "postgres";
-    private static final String PASSWORD = "137913";
+    private static final String URL = "jdbc:postgresql://localhost:5432/clinica_veterinaria";
+    private static final String USUARIO = "postgres";
+    private static final String SENHA = "137913";
 
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+    public static Connection getConexao() {
+        try {
+            return DriverManager.getConnection(URL, USUARIO, SENHA);
+        } catch (SQLException e) {
+            throw new RuntimeException("[INFRAESTRUTURA] Falha crítica ao estabelecer conexão com a base de dados: " + e.getMessage());
+        }
     }
 }
