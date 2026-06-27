@@ -1,6 +1,6 @@
 # Cenário 2 — Sistema de Oficina Mecânica
 
-## 📊 Tabelas do Banco de Dados (PostgreSQL)
+## Tabelas do Banco de Dados (PostgreSQL)
 
 ### cliente
 | Campo | Tipo | Restrição |
@@ -29,7 +29,7 @@
 
 ---
 
-## 🛠️ Comandos SQL (DDL)
+## Comandos SQL (DDL)
 
 ```sql
 CREATE TABLE cliente (
