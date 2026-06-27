@@ -1,4 +1,3 @@
-```markdown
 # Cenário 1 — Sistema de Clínica Veterinária
 
 ## Tabelas do Banco de Dados (PostgreSQL)
