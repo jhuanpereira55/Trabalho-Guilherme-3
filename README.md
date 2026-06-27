@@ -1,18 +1,28 @@
-# Cenário 2 — Sistema de Clínica Veterinária
+# Cenário 2 — Sistema de Oficina Mecânica
 
 ## Tabelas do Banco de Dados (PostgreSQL)
 
-### tutor
-| Campo | Tipo | Descrição |
+### cliente
+| Campo | Tipo | Restrição |
 | :--- | :--- | :--- |
-| id | SERIAL PK | Identificador único do tutor |
-| nome | VARCHAR(100) | Nome do tutor |
-| endereco | VARCHAR(200) | Endereço do tutor |
-| telefone | VARCHAR(20) | Telefone do tutor |
+| id | SERIAL | PRIMARY KEY |
+| nome | VARCHAR(100) | NOT NULL |
+| telefone | VARCHAR(20) | NOT NULL |
 
-### animal
-| Campo | Tipo | Descrição |
+### veiculo
+| Campo | Tipo | Restrição |
 | :--- | :--- | :--- |
-| id | SERIAL PK | Identificador único |
-| nome | VARCHAR(100) | Nome do animal |
-| especie | VARCHAR(50) | Espécie do animal |
+| id | SERIAL | PRIMARY KEY |
+| placa | VARCHAR(10) | NOT NULL, UNIQUE |
+| modelo | VARCHAR(100) | NOT NULL |
+| ano | INTEGER | NOT NULL |
+| id_cliente | INTEGER | FK → cliente(id), NOT NULL |
+
+### ordem_servico
+| Campo | Tipo | Restrição |
+| :--- | :--- | :--- |
+| id | SERIAL | PRIMARY KEY |
+| id_veiculo | INTEGER | FK → veiculo(id), NOT NULL |
+| descricao | TEXT | NOT NULL |
+| valor | NUMERIC(10,2) | NOT NULL, CHECK >= 0 |
+| status | VARCHAR(20) | NOT NULL, DEFAULT 'ABERTA' |
